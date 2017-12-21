@@ -19,15 +19,16 @@ func MarshalToString(t *Task) (string, error) {
 	return Marshaler.MarshalToString(t)
 }
 
-// RunnableState returns true if the state is RUNNING or INITIALIZING
-func RunnableState(s State) bool {
-	return s == State_INITIALIZING || s == State_RUNNING
+// Final returns true if the state is any of the final states:
+//   complete, executor error, system error, canceled
+func (s State) Final() bool {
+	return s == Complete || s == ExecutorError || s == SystemError || s == Canceled
 }
 
-// TerminalState returns true if the state is COMPLETE, ERROR, SYSTEM_ERROR, or CANCELED
-func TerminalState(s State) bool {
-	return s == State_COMPLETE || s == State_EXECUTOR_ERROR || s == State_SYSTEM_ERROR ||
-		s == State_CANCELED
+// Active returns true if the state is any of the active states:
+//   queued, initializing, running
+func (s State) Active() bool {
+	return s == Queued || s == Initializing || s == Running
 }
 
 // GetBasicView returns the basic view of a task.
