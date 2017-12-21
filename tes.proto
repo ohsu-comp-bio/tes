@@ -199,7 +199,7 @@ message Executor {
 
   // OPTIONAL
   //
-  // Enviromental variables to set within the container.
+  // Environment variables to set within the container.
   map<string,string> env = 8;
 }
 

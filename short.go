@@ -15,7 +15,7 @@ const (
 
 // View constants for convenience
 const (
-  Minimal = TaskView_MINIMAL
-  Basic = TaskView_BASIC
-  Full = TaskView_FULL
+	Minimal = TaskView_MINIMAL
+	Basic   = TaskView_BASIC
+	Full    = TaskView_FULL
 )

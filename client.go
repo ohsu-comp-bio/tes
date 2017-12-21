@@ -1,12 +1,12 @@
 package tes
 
 import (
-	"io/ioutil"
 	"bytes"
 	"errors"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
 	"golang.org/x/net/context"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -40,8 +40,8 @@ func NewClient(address string) (*Client, error) {
 
 // Client represents the HTTP Task client.
 type Client struct {
-	address   string
-	client    *http.Client
+	address string
+	client  *http.Client
 }
 
 // GetTask returns the raw bytes from GET /v1/tasks/{id}
@@ -174,9 +174,9 @@ func (c *Client) WaitForTask(ctx context.Context, taskIDs ...string) error {
 				return err
 			}
 			switch r.State {
-      case Complete:
+			case Complete:
 				done = true
-      case ExecutorError, SystemError, Canceled:
+			case ExecutorError, SystemError, Canceled:
 				errMsg := fmt.Sprintf("Task %s exited with state %s", id, r.State.String())
 				return errors.New(errMsg)
 			default:
@@ -189,7 +189,6 @@ func (c *Client) WaitForTask(ctx context.Context, taskIDs ...string) error {
 	}
 	return nil
 }
-
 
 // checkResponse does some basic error handling
 // and reads the response body into a byte array
