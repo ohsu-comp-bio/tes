@@ -97,3 +97,8 @@ func (task *Task) MarshalJSON() ([]byte, error) {
 	}
 	return b.Bytes(), nil
 }
+
+func (task *Task) UnmarshalJSON(b []byte) error {
+	by := bytes.NewBuffer(b)
+	return jsonpb.Unmarshal(by, task)
+}
