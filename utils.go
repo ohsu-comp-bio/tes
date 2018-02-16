@@ -1,10 +1,13 @@
 package tes
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/getlantern/deepcopy"
 	"github.com/golang/protobuf/jsonpb"
 )
+
+var mar = jsonpb.Marshaler{}
 
 // Marshaler marshals tasks to indented JSON.
 var Marshaler = jsonpb.Marshaler{
@@ -84,4 +87,13 @@ func (task *Task) GetExecLog(attempt int, i int) *ExecutorLog {
 	}
 
 	return tl.Logs[i]
+}
+
+func (task *Task) MarshalJSON() ([]byte, error) {
+	var b bytes.Buffer
+	err := mar.Marshal(&b, task)
+	if err != nil {
+		return nil, err
+	}
+	return b.Bytes(), nil
 }
