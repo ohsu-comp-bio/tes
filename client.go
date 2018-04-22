@@ -2,7 +2,6 @@ package tes
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
 	"golang.org/x/net/context"
@@ -13,6 +12,8 @@ import (
 	"strings"
 	"time"
 )
+
+var ErrNotFound = fmt.Errorf("task not found")
 
 // NewClient returns a new HTTP client for accessing
 // Create/List/Get/Cancel Task endpoints. "address" is the address
@@ -177,8 +178,7 @@ func (c *Client) WaitForTask(ctx context.Context, taskIDs ...string) error {
 			case Complete:
 				done = true
 			case ExecutorError, SystemError, Canceled:
-				errMsg := fmt.Sprintf("Task %s exited with state %s", id, r.State.String())
-				return errors.New(errMsg)
+				return fmt.Errorf("Task %s exited with state %s", id, r.State.String())
 			default:
 				done = false
 			}
@@ -201,6 +201,9 @@ func checkResponse(resp *http.Response, err error) ([]byte, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+	if resp.StatusCode == 404 {
+		return nil, ErrNotFound
 	}
 	if (resp.StatusCode / 100) != 2 {
 		return nil, fmt.Errorf("[STATUS CODE - %d]\t%s", resp.StatusCode, body)
